@@ -1,13 +1,11 @@
 /**
- * Corrected database types for the connected external Supabase project.
+ * Database types for the connected external Supabase project.
  *
- * The generated `types.ts` in this directory is stale: it predates column
- * renames in the live database (`anime.poster_url` -> `poster_path`,
- * `episodes.episode_number` -> `number`, `episodes.thumbnail_url` ->
- * `thumbnail_path`, `site_settings.logo_url` -> `logo_path`, removal of
- * `site_settings.created_at`, and the added anime detail columns).
- * This module mirrors the generated file's structure but matches the real
- * schema (verified against live rows via the Data API).
+ * Matches the verified live schema (re-checked via the PostgREST OpenAPI
+ * spec on 2026-10-24): `anime.poster_url`, `episodes.episode_number`,
+ * `episodes.thumbnail_url`, `site_settings.logo_url` + `ad_slots`.
+ * The anime detail columns (alt_title, studio, rating, duration_minutes,
+ * total_episodes) and `site_settings.hero` do not exist live.
  */
 export type Json =
   | string
@@ -46,58 +44,43 @@ export type Database = {
       }
       anime: {
         Row: {
-          alt_title: string | null
           created_at: string
-          duration_minutes: number | null
           id: string
           is_published: boolean
-          poster_path: string | null
-          rating: number | null
+          poster_url: string | null
           season: string | null
           slug: string
           status: Database["public"]["Enums"]["anime_status"]
-          studio: string | null
           synopsis: string | null
           title: string
-          total_episodes: number | null
           type: Database["public"]["Enums"]["anime_type"]
           updated_at: string
           year: number | null
         }
         Insert: {
-          alt_title?: string | null
           created_at?: string
-          duration_minutes?: number | null
           id?: string
           is_published?: boolean
-          poster_path?: string | null
-          rating?: number | null
+          poster_url?: string | null
           season?: string | null
           slug: string
           status?: Database["public"]["Enums"]["anime_status"]
-          studio?: string | null
           synopsis?: string | null
           title: string
-          total_episodes?: number | null
           type?: Database["public"]["Enums"]["anime_type"]
           updated_at?: string
           year?: number | null
         }
         Update: {
-          alt_title?: string | null
           created_at?: string
-          duration_minutes?: number | null
           id?: string
           is_published?: boolean
-          poster_path?: string | null
-          rating?: number | null
+          poster_url?: string | null
           season?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["anime_status"]
-          studio?: string | null
           synopsis?: string | null
           title?: string
-          total_episodes?: number | null
           type?: Database["public"]["Enums"]["anime_type"]
           updated_at?: string
           year?: number | null
@@ -142,11 +125,11 @@ export type Database = {
           anime_id: string
           created_at: string
           embed_url: string | null
+          episode_number: number
           id: string
           is_published: boolean
-          number: number
           published_at: string | null
-          thumbnail_path: string | null
+          thumbnail_url: string | null
           title: string | null
           updated_at: string
         }
@@ -154,11 +137,11 @@ export type Database = {
           anime_id: string
           created_at?: string
           embed_url?: string | null
+          episode_number: number
           id?: string
           is_published?: boolean
-          number: number
           published_at?: string | null
-          thumbnail_path?: string | null
+          thumbnail_url?: string | null
           title?: string | null
           updated_at?: string
         }
@@ -166,11 +149,11 @@ export type Database = {
           anime_id?: string
           created_at?: string
           embed_url?: string | null
+          episode_number?: number
           id?: string
           is_published?: boolean
-          number?: number
           published_at?: string | null
-          thumbnail_path?: string | null
+          thumbnail_url?: string | null
           title?: string | null
           updated_at?: string
         }
@@ -187,30 +170,30 @@ export type Database = {
       site_settings: {
         Row: {
           ad_slots: Json
+          created_at: string
           footer_text: string | null
-          hero: Json
           id: number
-          logo_path: string | null
+          logo_url: string | null
           site_name: string
           tagline: string | null
           updated_at: string
         }
         Insert: {
           ad_slots?: Json
+          created_at?: string
           footer_text?: string | null
-          hero?: Json
           id?: number
-          logo_path?: string | null
+          logo_url?: string | null
           site_name?: string
           tagline?: string | null
           updated_at?: string
         }
         Update: {
           ad_slots?: Json
+          created_at?: string
           footer_text?: string | null
-          hero?: Json
           id?: number
-          logo_path?: string | null
+          logo_url?: string | null
           site_name?: string
           tagline?: string | null
           updated_at?: string
