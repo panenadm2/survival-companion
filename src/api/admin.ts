@@ -26,13 +26,8 @@ async function mapAnime(row: AnimeRow, tagIds: string[] = []): Promise<Anime> {
     id: row.id,
     title: row.title,
     slug: row.slug,
-    altTitle: row.alt_title ?? undefined,
-    studio: row.studio ?? undefined,
-    rating: row.rating == null ? undefined : Number(row.rating),
-    durationMinutes: row.duration_minutes ?? undefined,
-    totalEpisodes: row.total_episodes ?? undefined,
     synopsis: row.synopsis ?? "",
-    posterUrl: await posterDisplayUrl(row.poster_path),
+    posterUrl: await posterDisplayUrl(row.poster_url),
     status: row.status,
     type: row.type,
     season: row.season ?? "",
@@ -48,11 +43,11 @@ function mapEpisode(row: EpisodeRow): Episode {
   return {
     id: row.id,
     animeId: row.anime_id,
-    number: row.number,
+    number: row.episode_number,
     title: row.title ?? "",
     embedUrl: row.embed_url ?? "",
-    thumbnailUrl: row.thumbnail_path
-      ? getPublicUrl("thumbnails", row.thumbnail_path)
+    thumbnailUrl: row.thumbnail_url
+      ? getPublicUrl("thumbnails", row.thumbnail_url)
       : undefined,
     isPublished: row.is_published,
     publishedAt: row.published_at ?? "",
@@ -68,8 +63,8 @@ function mapSettings(row: SettingsRow): SiteSettings {
   return {
     siteName: row.site_name,
     tagline: row.tagline ?? "",
-    logoUrl: row.logo_path
-      ? getPublicUrl("site", row.logo_path)
+    logoUrl: row.logo_url
+      ? getPublicUrl("site", row.logo_url)
       : null,
     footerText: row.footer_text ?? "",
   };
@@ -218,7 +213,7 @@ export async function getAdminSnapshot() {
     settingsResult,
   ] = await Promise.all([
     supabase.from("anime").select("*").order("title"),
-    supabase.from("episodes").select("*").order("number"),
+    supabase.from("episodes").select("*").order("episode_number"),
     supabase.from("tags").select("*").order("name"),
     supabase.from("site_settings").select("*")
       .eq("id", 1).maybeSingle(),
@@ -329,13 +324,8 @@ export async function saveAnime(
   const payload = {
     title: data.title,
     slug: data.slug || slugify(data.title),
-    alt_title: data.altTitle || null,
-    studio: data.studio || null,
-    rating: data.rating ?? null,
-    duration_minutes: data.durationMinutes ?? null,
-    total_episodes: data.totalEpisodes ?? null,
     synopsis: data.synopsis,
-    poster_path: posterPath,
+    poster_url: posterPath,
     status: data.status,
     type: data.type,
     season: data.season || null,
