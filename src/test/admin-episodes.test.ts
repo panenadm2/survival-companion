@@ -110,7 +110,7 @@ it("preserves the existing thumbnail object path when editing its display URL", 
 });
 
 it("saves a special episode with its label and no episode number", async () => {
-  ok({ id: "a1" }); ok([]); ok({ ...row, number: null, special_label: "ova" });
+  ok({ id: "a1" }); ok({ ...row, number: null, special_label: "ova" });
   const saved = await saveEpisode({ ...input, number: null, specialLabel: "ova" });
   expect(saved.specialLabel).toBe("ova");
   expect(saved.number).toBeNull();
