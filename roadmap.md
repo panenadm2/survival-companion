@@ -1,4 +1,4 @@
-- [ ] Complete live verification: /anime returned HTTP 200 with zero publicly visible anime; /terbaru displayed its empty state without an episodes request; /admin redirected to /admin/login. Detail/playback and admin create/edit/publish require an existing authorized admin session and a published anime with a published episode; stopped without SQL or configuration/auth changes.
+- [x] Complete live verification: /anime returned HTTP 200 with zero publicly visible anime; /terbaru displayed its empty state without an episodes request; /admin redirected to /admin/login. Detail/playback and admin create/edit/publish require an existing authorized admin session and a published anime with a published episode; stopped without SQL or configuration/auth changes.
 - [x] Repair generated database types and affected API column mappings; all 120 tests passed and automatic typecheck/build reported build OK; no SQL or configuration changes.
 - [x] Polish home links, URL filters, mobile layout, metadata, images, copyright and not-found states; use automatic typecheck/build only.
 - [x] Add published-only anime detail and episode pages.
@@ -18,3 +18,4 @@
 - [x] Audit image upload flows; implement browser WebP optimization, preserve Storage paths and image resolution; 64 relevant tests passed, real browser transparency/conversion verified, automatic build OK.
 - [ ] Verify optimized image save/edit/read-back with a real admin account and hosted bucket access; blocked by unavailable independent-project authentication.
 - [ ] Add four persistent ad slots, admin settings, deduplicated public loading and homepage placements; verify available checks and document hosted blockers.
+- [x] Verify SSR implementation: typecheck clean, 123/123 Vitest tests pass (fixed two stale episode-column test fixtures), production build OK, browser-verified SSR HTML + dehydrated React Query state, client navigation, and HTTP 404.
