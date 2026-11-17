@@ -31,6 +31,7 @@ import { Route as AnimeSlugRouteImport } from './routes/anime.$slug'
 import { Route as AdminAnimeIndexRouteImport } from './routes/admin.anime.index'
 import { Route as AdminAnimeIdRouteImport } from './routes/admin.anime.$id'
 import { Route as AdminAnimeBaruRouteImport } from './routes/admin.anime.baru'
+import { Route as AdminAnimeImportRouteImport } from './routes/admin.anime.import'
 import { Route as AdminEpisodeIndexRouteImport } from './routes/admin.episode.index'
 import { Route as AdminEpisodeIdRouteImport } from './routes/admin.episode.$id'
 import { Route as AdminEpisodeBaruRouteImport } from './routes/admin.episode.baru'
@@ -153,6 +154,11 @@ const AdminAnimeBaruRoute = AdminAnimeBaruRouteImport.update({
   path: '/baru',
   getParentRoute: () => AdminAnimeRoute,
 } as any)
+const AdminAnimeImportRoute = AdminAnimeImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => AdminAnimeRoute,
+} as any)
 const AdminEpisodeIndexRoute = AdminEpisodeIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -233,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/anime/': typeof AnimeIndexRoute
   '/admin/anime/$id': typeof AdminAnimeIdRoute
   '/admin/anime/baru': typeof AdminAnimeBaruRoute
+  '/admin/anime/import': typeof AdminAnimeImportRoute
   '/admin/episode/$id': typeof AdminEpisodeIdRoute
   '/admin/episode/baru': typeof AdminEpisodeBaruRouteWithChildren
   '/admin/episode/massal': typeof AdminEpisodeMassalRouteWithChildren
@@ -264,6 +271,7 @@ export interface FileRoutesByTo {
   '/anime': typeof AnimeIndexRoute
   '/admin/anime/$id': typeof AdminAnimeIdRoute
   '/admin/anime/baru': typeof AdminAnimeBaruRoute
+  '/admin/anime/import': typeof AdminAnimeImportRoute
   '/admin/episode/$id': typeof AdminEpisodeIdRoute
   '/anime/$slug/movie': typeof AnimeSlugMovieRoute
   '/admin/anime': typeof AdminAnimeIndexRoute
@@ -298,6 +306,7 @@ export interface FileRoutesById {
   '/anime/': typeof AnimeIndexRoute
   '/admin/anime/$id': typeof AdminAnimeIdRoute
   '/admin/anime/baru': typeof AdminAnimeBaruRoute
+  '/admin/anime/import': typeof AdminAnimeImportRoute
   '/admin/episode/$id': typeof AdminEpisodeIdRoute
   '/admin/episode/baru': typeof AdminEpisodeBaruRouteWithChildren
   '/admin/episode/massal': typeof AdminEpisodeMassalRouteWithChildren
@@ -335,6 +344,7 @@ export interface FileRouteTypes {
     | '/anime/'
     | '/admin/anime/$id'
     | '/admin/anime/baru'
+    | '/admin/anime/import'
     | '/admin/episode/$id'
     | '/admin/episode/baru'
     | '/admin/episode/massal'
@@ -366,6 +376,7 @@ export interface FileRouteTypes {
     | '/anime'
     | '/admin/anime/$id'
     | '/admin/anime/baru'
+    | '/admin/anime/import'
     | '/admin/episode/$id'
     | '/anime/$slug/movie'
     | '/admin/anime'
@@ -399,6 +410,7 @@ export interface FileRouteTypes {
     | '/anime/'
     | '/admin/anime/$id'
     | '/admin/anime/baru'
+    | '/admin/anime/import'
     | '/admin/episode/$id'
     | '/admin/episode/baru'
     | '/admin/episode/massal'
@@ -581,6 +593,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnimeBaruRouteImport
       parentRoute: typeof AdminAnimeRoute
     }
+    '/admin/anime/import': {
+      id: '/admin/anime/import'
+      path: '/import'
+      fullPath: '/admin/anime/import'
+      preLoaderRoute: typeof AdminAnimeImportRouteImport
+      parentRoute: typeof AdminAnimeRoute
+    }
     '/admin/episode/': {
       id: '/admin/episode/'
       path: '/'
@@ -664,12 +683,14 @@ declare module '@tanstack/react-router' {
 interface AdminAnimeRouteChildren {
   AdminAnimeIdRoute: typeof AdminAnimeIdRoute
   AdminAnimeBaruRoute: typeof AdminAnimeBaruRoute
+  AdminAnimeImportRoute: typeof AdminAnimeImportRoute
   AdminAnimeIndexRoute: typeof AdminAnimeIndexRoute
 }
 
 const AdminAnimeRouteChildren: AdminAnimeRouteChildren = {
   AdminAnimeIdRoute: AdminAnimeIdRoute,
   AdminAnimeBaruRoute: AdminAnimeBaruRoute,
+  AdminAnimeImportRoute: AdminAnimeImportRoute,
   AdminAnimeIndexRoute: AdminAnimeIndexRoute,
 }
 
