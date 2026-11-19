@@ -7,11 +7,11 @@ import type { Anime, Tag } from "./types";
 type AnimeType = Database["public"]["Enums"]["anime_type"];
 type AnimeStatus = Database["public"]["Enums"]["anime_status"];
 
-export const CSV_HEADERS = ["title", "alt_title", "type", "status", "season", "year", "studio", "duration_minutes", "total_episodes", "genres", "synopsis", "poster_url"] as const;
+export const CSV_HEADERS = ["title", "alt_title", "type", "status", "season", "year", "studio", "rating", "duration_minutes", "total_episodes", "genres", "synopsis", "poster_url"] as const;
 
 const SAMPLE_ROWS = [
-  ["Contoh Judul Anime", "Example Anime Title", "tv", "ongoing", "Spring", "2025", "Nama Studio", "24", "12", "Action, Fantasy", "Sinopsis singkat anime.", ""],
-  ["Contoh Judul Movie", "", "movie", "completed", "", "2024", "Nama Studio", "110", "1", "Drama", "Sinopsis singkat film.", "https://contoh.com/poster.jpg"],
+  ["Contoh Judul Anime", "Example Anime Title", "tv", "ongoing", "Spring", "2025", "Nama Studio", "8.5", "24", "12", "Action, Fantasy", "Sinopsis singkat anime.", ""],
+  ["Contoh Judul Movie", "", "movie", "completed", "", "2024", "Nama Studio", "", "110", "1", "Drama", "Sinopsis singkat film.", "https://contoh.com/poster.jpg"],
 ];
 
 function csvCell(value: string): string {
@@ -68,6 +68,7 @@ export interface ImportRow {
   season: string;
   year: number | null;
   studio: string;
+  rating: number | null;
   durationMinutes: number | null;
   totalEpisodes: number | null;
   genres: string[];
@@ -82,6 +83,17 @@ function optionalInt(raw: string, label: string, min: number, max: number, reaso
   const n = Number(v);
   if (!Number.isInteger(n) || n < min || n > max) { reasons.push(`${label} harus bilangan bulat ${min}–${max}.`); return null; }
   return n;
+}
+
+function optionalRating(raw: string, reasons: string[]): number | null {
+  const value = raw.trim();
+  if (!value) return null;
+  const rating = Number(value);
+  if (!Number.isFinite(rating) || rating < 0 || rating > 10) {
+    reasons.push("Rating harus berupa angka antara 0–10.");
+    return null;
+  }
+  return rating;
 }
 
 export function analyzeCsv(text: string, existing: Anime[], tags: Tag[]): { rows: ImportRow[]; headerError: string | null } {
@@ -122,6 +134,7 @@ export function analyzeCsv(text: string, existing: Anime[], tags: Tag[]): { rows
     const status = STATUS_ALIASES[statusRaw] ?? null;
     if (!status) invalid.push(`Status "${col(r, "status")}" tidak dikenal (ongoing, completed, upcoming).`);
     const year = optionalInt(col(r, "year"), "Tahun", 1900, 2200, invalid);
+    const rating = optionalRating(col(r, "rating"), invalid);
     const durationMinutes = optionalInt(col(r, "duration_minutes"), "Durasi", 1, 100000, invalid);
     const totalEpisodes = optionalInt(col(r, "total_episodes"), "Total episode", 1, 100000, invalid);
 
@@ -159,7 +172,7 @@ export function analyzeCsv(text: string, existing: Anime[], tags: Tag[]): { rows
       status: invalid.length ? "invalid" : dup.length ? "duplikat" : "baru",
       reasons: [...invalid, ...dup],
       title, altTitle, slug, type, status_: status,
-      season: col(r, "season"), year, studio: col(r, "studio"),
+      season: col(r, "season"), year, studio: col(r, "studio"), rating,
       durationMinutes, totalEpisodes, genres, tagIds,
       synopsis: col(r, "synopsis"), posterPath,
     });
@@ -185,9 +198,10 @@ export async function importAnimeRows(rows: ImportRow[]): Promise<ImportResult[]
       title: row.title,
       alt_title: row.altTitle || null,
       slug: row.slug,
-      synopsis: row.synopsis || null,
+      synopsis: row.synopsis ?? "",
       poster_path: row.posterPath,
       studio: row.studio || null,
+      rating: row.rating,
       type: row.type,
       status: row.status_,
       season: row.season || null,

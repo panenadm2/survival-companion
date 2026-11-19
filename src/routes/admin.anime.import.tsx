@@ -113,7 +113,7 @@ function ImportAnime() {
         <table className="w-full min-w-[900px] text-left text-sm">
           <thead className="bg-card text-muted-foreground"><tr>
             <th className="px-3 py-3"><input type="checkbox" aria-label="Pilih semua yang baru" className="size-4 accent-primary" checked={allSelected} disabled={!newRows.length} onChange={() => setSelected(allSelected ? new Set() : new Set(newRows.map((r) => r.lineNumber)))} /></th>
-            {["Baris", "Status", "Judul", "Tipe", "Status anime", "Tahun", "Genre", "Keterangan"].map((h) => <th key={h} className="px-3 py-3 font-medium">{h}</th>)}
+            {["Baris", "Status", "Judul", "Tipe", "Status anime", "Tahun", "Rating", "Genre", "Keterangan"].map((h) => <th key={h} className="px-3 py-3 font-medium">{h}</th>)}
           </tr></thead>
           <tbody className="divide-y divide-border">{rows.map((r) => <tr key={r.lineNumber}>
             <td className="px-3 py-2"><input type="checkbox" aria-label={`Pilih ${r.title}`} className="size-4 accent-primary" disabled={r.status !== "baru"} checked={selected.has(r.lineNumber)} onChange={() => toggle(r.lineNumber)} /></td>
@@ -123,6 +123,7 @@ function ImportAnime() {
             <td className="px-3">{r.type ? typeLabel[r.type] : "—"}</td>
             <td className="px-3">{r.status_ ? statusLabel[r.status_] : "—"}</td>
             <td className="px-3">{r.year ?? "—"}</td>
+            <td className="px-3">{r.rating ?? "—"}</td>
             <td className="px-3">{r.genres.join(", ") || "—"}</td>
             <td className="px-3 text-xs text-muted-foreground">{r.reasons.join(" ") || "Siap diimpor"}</td>
           </tr>)}</tbody>
